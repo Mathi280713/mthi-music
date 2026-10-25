@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a7c6c">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<style>html,body{margin:0;padding:0}</style></head><body>
+<title>Mthi Music</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root {
+  --bg: #eceff0;
+  --surface: #ffffff;
+  --ink: #11181c;
+  --muted: #5a686e;
+  --line: #d3dadc;
+  --accent: #0a7c6c;
+  --accent-ink: #ffffff;
+  --accent-soft: #d6efea;
+  --danger: #b3261e;
+  --paper-bg: #ffffff;
+  --paper-ink: #151a1d;
+  --shadow: 0 10px 30px rgba(10, 30, 28, 0.16);
+  --font-display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --font-ui: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1113;
+    --surface: #151c1f;
+    --ink: #e7eeef;
+    --muted: #8c9ca2;
+    --line: #263135;
+    --accent: #4fd6bd;
+    --accent-ink: #03211c;
+    --accent-soft: #123b35;
+    --danger: #ff8a80;
+    --paper-bg: #151c1f;
+    --paper-ink: #e7eeef;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1113;
+  --surface: #151c1f;
+  --ink: #e7eeef;
+  --muted: #8c9ca2;
+  --line: #263135;
+  --accent: #4fd6bd;
+  --accent-ink: #03211c;
+  --accent-soft: #123b35;
+  --danger: #ff8a80;
+  --paper-bg: #151c1f;
+  --paper-ink: #e7eeef;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.45;
+  overflow: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+#app { position: relative; height: 100%; max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ibtn { flex: none; display: grid; place-items: center; width: 46px; height: 46px; padding: 0; background: transparent; border: 0; border-radius: 12px; color: var(--ink); }
+.ibtn:hover { background: var(--accent-soft); }
+.ibtn svg, .tbtn svg, .opt svg { display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn { min-height: 46px; padding: 0 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-weight: 600; font-size: 15px; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.danger { color: var(--danger); border-color: var(--danger); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.home { display: flex; flex-direction: column; height: 100%; }
+.home-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 14px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1; letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+.homeq { margin: 12px 0 8px; min-height: 48px; width: 100%; padding: 0 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-size: 16px; }
+.note { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+.list { flex: 1; min-height: 0; overflow-y: auto; display: grid; align-content: start; gap: 10px; padding: 4px 0 110px; }
+.empty { padding: 36px 8px; text-align: center; color: var(--muted); display: grid; gap: 8px; justify-items: center; }
+.empty h2 { margin: 0; font-family: var(--font-display); font-size: 26px; color: var(--ink); }
+.empty p { margin: 0; max-width: 34ch; }
+.fab { position: absolute; right: 0; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 8px; height: 58px; padding: 0 22px 0 18px; border: 0; border-radius: 18px; background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 16px; box-shadow: var(--shadow); }
+.fab svg { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.ed { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.ed-top { order: -2; display: flex; align-items: center; gap: 4px; flex: none; min-height: 56px; }
+.ed-title { flex: 1; min-width: 0; display: grid; }
+.ed-title input { min-width: 0; width: 100%; padding: 2px 4px; background: transparent; border: 0; border-radius: 6px; font-family: var(--font-display); font-weight: 700; font-size: 20px; line-height: 1.2; }
+.ed-title input::placeholder { color: var(--muted); }
+.ed-title small { padding: 0 4px; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ed-title small.err { color: var(--danger); }
+.backdrop { position: fixed; inset: 0; z-index: 50; background: rgba(0, 0, 0, 0.45); }
+.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 51; max-width: 860px; max-height: 84%; margin: 0 auto; overflow-y: auto; padding: 8px max(16px, env(safe-area-inset-left, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--surface); border-radius: 22px 22px 0 0; box-shadow: var(--shadow); animation: up 0.22s ease-out; }
+@keyframes up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet .grab { width: 44px; height: 5px; margin: 4px auto 10px; border-radius: 3px; background: var(--line); }
+.sheet h2 { margin: 0 0 12px; font-family: var(--font-display); font-weight: 800; font-size: 22px; }
+.sheet h3 { margin: 16px 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.sheet p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.opt { display: flex; align-items: center; gap: 10px; min-height: 50px; padding: 0 12px; text-align: left; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; font-size: 15px; font-weight: 500; }
+.opt:hover { border-color: var(--accent); }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt svg { color: var(--accent); flex: none; }
+.opt.danger { color: var(--danger); }
+.opt.danger svg { color: var(--danger); }
+.field { display: grid; gap: 6px; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.field input, .field textarea { width: 100%; min-width: 0; min-height: 48px; padding: 10px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; font-size: 16px; font-weight: 400; color: var(--ink); }
+.field textarea { min-height: 120px; resize: vertical; }
+.rowbtn { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.stat { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.stat span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+.result { white-space: pre-wrap; padding: 12px; margin: 8px 0; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; max-height: 34vh; overflow-y: auto; color: var(--ink); font-size: 15px; }
+.toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 70; transform: translateX(-50%); max-width: calc(100% - 32px); padding: 11px 18px; background: var(--ink); color: var(--bg); border-radius: 14px; font-size: 14px; font-weight: 500; box-shadow: var(--shadow); animation: up 0.2s ease-out; }
+[hidden] { display: none !important; }
+input, textarea, select { box-sizing: border-box; max-width: 100%; }
+.field { min-width: 0; }
+.filewrap { position: relative; display: inline-flex; }
+.ovl { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; font-size: 0; cursor: pointer; z-index: 2; }
+.opt.filewrap { position: relative; }
+*, *::before, *::after { box-sizing: border-box; }
+.top { flex: none; padding: 14px 0 6px; }
+.content { flex: 1; min-height: 0; overflow-y: auto; padding: 6px 0 24px; }
+.tabs { flex: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 6px 0 calc(6px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); }
+.tabs button { display: grid; justify-items: center; gap: 2px; min-height: 52px; background: transparent; border: 0; border-radius: 12px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.tabs button svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tabs button[aria-selected="true"] { color: var(--accent); background: var(--accent-soft); }
+.seg { display: flex; gap: 6px; margin: 4px 0 10px; overflow-x: auto; }
+.seg button, .chip { flex: none; min-height: 38px; padding: 0 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; font-weight: 600; font-size: 14px; }
+.seg button[aria-pressed="true"], .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0 10px; }
+.field-in { width: 100%; min-height: 48px; padding: 0 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-size: 16px; }
+.bar { display: flex; gap: 8px; margin: 8px 0 10px; }
+.bar .btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; }
+.bar svg, .btn svg, .row svg, .mini svg, .pl svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.row { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 62px; padding: 6px 4px 6px 6px; background: transparent; border: 0; border-radius: 14px; text-align: left; }
+.row:hover, .row.on { background: var(--accent-soft); }
+.row.on .t { color: var(--accent); }
+.cov { flex: none; width: 48px; height: 48px; border-radius: 10px; background: var(--line) center/cover no-repeat; display: grid; place-items: center; color: var(--muted); overflow: hidden; }
+.cov img { width: 100%; height: 100%; object-fit: cover; }
+.meta { flex: 1; min-width: 0; display: grid; }
+.meta .t { font-weight: 600; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta .s { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dur { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.mini { flex: none; display: flex; align-items: center; gap: 10px; padding: 8px; margin-bottom: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+.mini .meta { cursor: pointer; }
+.mini .prog { position: absolute; }
+.pl { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; padding: 14px max(20px, env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px)); background: var(--bg); overflow-y: auto; animation: up 0.22s ease-out; }
+.pl .top-r { display: flex; align-items: center; justify-content: space-between; }
+.pl .big-cov { width: min(78vw, 46vh); aspect-ratio: 1; margin: 18px auto; border-radius: 24px; background: var(--line) center/cover no-repeat; display: grid; place-items: center; color: var(--muted); box-shadow: var(--shadow); overflow: hidden; }
+.pl .big-cov img { width: 100%; height: 100%; object-fit: cover; }
+.pl h2 { margin: 0; font-size: 24px; text-align: center; overflow-wrap: anywhere; }
+.pl .art { text-align: center; color: var(--muted); margin: 4px 0 14px; }
+.pl .seek { width: 100%; accent-color: var(--accent); }
+.pl .times { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ctl { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0; }
+.ctl .ibtn { width: 56px; height: 56px; border-radius: 50%; }
+.ctl .play { width: 76px; height: 76px; background: var(--accent); color: var(--accent-ink); }
+.ctl .ibtn[aria-pressed="true"], .pl .ibtn[aria-pressed="true"] { color: var(--accent); background: var(--accent-soft); }
+.live { display: inline-block; padding: 2px 8px; background: #d33; color: #fff; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: .06em; }
+.note { color: var(--muted); font-size: 13px; }
+.empty { padding: 36px 10px; text-align: center; color: var(--muted); display: grid; gap: 10px; justify-items: center; }
+.empty h2 { color: var(--ink); margin: 0; font-size: 20px; }
+.prgbar { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 8px 0; }
+.prgbar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+
+</style>
+<div id="app">
+  <header class="top"><h1 class="brand">Mthi <span>Music</span></h1></header>
+  <main class="content" id="content"></main>
+  <div class="mini" id="mini" hidden></div>
+  <nav class="tabs" id="tabs" aria-label="Secciones">
+    <button type="button" data-tab="disc" aria-selected="true"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>Música</span></button>
+    <button type="button" data-tab="saved" aria-selected="false"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span>Sin conexión</span></button>
+    <button type="button" data-tab="radio" aria-selected="false"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16v11H4zM8 9l9-5M13 13h5M13 16h5"/></svg><span>Radio</span></button>
+  </nav>
+  <div id="layer"></div>
+</div>
+
+<script>
+/* ===== Utilidades ===== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } };
+const debounce = (fn, ms) => { let t; const f = (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; f.flush = () => { clearTimeout(t); fn(); }; f.cancel = () => clearTimeout(t); return f; };
+const plural = (n, a, b) => n + ' ' + (n === 1 ? a : b);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const mkCanvas = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; };
+const toBlob = (c, type, q) => new Promise((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('No se pudo crear la imagen.'))), type, q));
+const nextFrame = () => new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+function fmtSize(n) { return n < 1024 ? n + ' B' : n < 1048576 ? Math.round(n / 1024) + ' KB' : (n / 1048576).toFixed(1) + ' MB'; }
+function timeAgo(ms) {
+  const d = Date.now() - ms;
+  if (d < 45000) return 'ahora';
+  if (d < 3600000) return 'hace ' + Math.max(1, Math.round(d / 60000)) + ' min';
+  if (d < 86400000) return 'hace ' + Math.round(d / 3600000) + ' h';
+  if (d < 172800000) return 'ayer';
+  try { return new Date(ms).toLocaleDateString('es-CR', { day: 'numeric', month: 'short' }); } catch (e) { return ''; }
+}
+function toast(msg, ms = 2800) {
+  $$('.toast').forEach((t) => t.remove());
+  const t = el('div', 'toast', msg); t.setAttribute('role', 'status'); $('#layer').appendChild(t); setTimeout(() => t.remove(), ms);
+}
+const ICONS = {
+  back: 'M15 5l-7 7 7 7', camera: 'M4 8h3l2-3h6l2 3h3v11H4zM12 11.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z',
+  image: 'M4 5h16v14H4zM9 10a1.6 1.6 0 100-3.2A1.6 1.6 0 009 10zM4 17l5-5 4 4 3-3 4 4',
+  trash: 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13', share: 'M12 15V3M7 8l5-5 5 5M5 13v8h14v-8',
+  download: 'M12 4v11M7 11l5 5 5-5M5 20h14', file: 'M7 3h7l5 5v13H7zM14 3v5h5', plus: 'M12 5v14M5 12h14',
+  left: 'M15 5l-7 7 7 7', right: 'M9 5l7 7-7 7', copy: 'M9 9h11v11H9zM5 15V5h10', pen: 'M4 20l4-1L19 8l-3-3L5 16zM14 7l3 3',
+  dots: 'M12 5h.01M12 12h.01M12 19h.01', check: 'M5 12l5 5 9-10', search: 'M11 4a7 7 0 100 14 7 7 0 000-14zM20 20l-4-4', star: 'M12 3l2.7 5.6 6.1.8-4.5 4.3 1.1 6.1L12 17l-5.4 2.8 1.1-6.1L3.2 9.4l6.1-.8z', speaker: 'M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11', clock: 'M12 4a8 8 0 100 16 8 8 0 000-16zM12 8v4l3 2', shuffle: 'M4 7h4l8 10h4M4 17h4l2-2.5M14 9.5L16 7h4M18 5l2 2-2 2M18 15l2 2-2 2', play: 'M7 4l13 8-13 8z', pause: 'M7 4h4v16H7zM13 4h4v16h-4z', next: 'M6 5l10 7-10 7zM18 5v14', prev: 'M18 5L8 12l10 7zM6 5v14', repeat: 'M4 11V9a3 3 0 013-3h12l-3-3M20 13v2a3 3 0 01-3 3H5l3 3', music: 'M9 18V5l11-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zM20 16a3 3 0 11-6 0 3 3 0 016 0z', radio: 'M4 9h16v11H4zM8 9l9-5M8 14.5a2 2 0 100 .01M13 13h5M13 16h5', globe: 'M12 3a9 9 0 100 18 9 9 0 000-18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18', moon: 'M20 14A8 8 0 019.5 4 8 8 0 1020 14z', list: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01', down: 'M6 9l6 6 6-6', sun: 'M12 8a4 4 0 100 8 4 4 0 000-8zM12 2v2M12 20v2M2 12h2M20 12h2'
+};
+function icon(n, s = 24) { return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + (ICONS[n] || '') + '"/></svg>'; }
+function paintIcons(r = document) { $$('[data-i]', r).forEach((e) => { if (!e.firstChild) e.innerHTML = icon(e.dataset.i); }); }
+
+/* hojas desde abajo */
+let sheetClose = null;
+function openSheet(title, build) {
+  if (sheetClose) sheetClose();
+  const bd = el('div', 'backdrop'), sh = el('div', 'sheet');
+  sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', title);
+  sh.appendChild(el('div', 'grab')); sh.appendChild(el('h2', '', title));
+  const close = () => { bd.remove(); sh.remove(); if (sheetClose === close) sheetClose = null; if (sh._onClose) sh._onClose(); };
+  sheetClose = close; bd.addEventListener('click', close);
+  build(sh, close); $('#layer').append(bd, sh);
+  return close;
+}
+function optBtn(ic, label, fn, o) {
+  o = o || {};
+  const b = el('button', 'opt' + (o.danger ? ' danger' : '')); b.type = 'button';
+  b.innerHTML = icon(ic, 22) + '<span>' + esc(label) + '</span>';
+  if (o.pressed != null) b.setAttribute('aria-pressed', o.pressed ? 'true' : 'false');
+  b.addEventListener('click', fn); return b;
+}
+const grid = (sh) => { const g = el('div', 'grid'); sh.appendChild(g); return g; };
+const note = (sh, t) => { const p = el('p', '', t); p.style.color = 'var(--muted)'; p.style.margin = '0 0 10px'; sh.appendChild(p); return p; };
+
+/* ===== Almacenamiento (IndexedDB; si no hay, memoria) ===== */
+const DB = {
+  db: null, mem: { scans: new Map(), blobs: new Map() },
+  async open() {
+    try {
+      this.db = await new Promise((res, rej) => {
+        const r = indexedDB.open('mthi-escaner', 1);
+        r.onupgradeneeded = () => { r.result.createObjectStore('scans', { keyPath: 'id' }); r.result.createObjectStore('blobs'); };
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); r.onblocked = () => rej(new Error('blocked'));
+      });
+      try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) { /* ok */ }
+    } catch (e) { this.db = null; }
+    return !!this.db;
+  },
+  rq(r) { return new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
+  tx(stores, fn) {
+    return new Promise((res, rej) => {
+      const t = this.db.transaction(stores, 'readwrite'); let out;
+      t.oncomplete = () => res(out); t.onabort = t.onerror = () => rej(t.error && t.error.name === 'QuotaExceededError' ? new Error('No hay espacio en este dispositivo.') : (t.error || new Error('No se pudo guardar.')));
+      out = fn(t);
+    });
+  },
+  async all() { return this.db ? this.rq(this.db.transaction('scans').objectStore('scans').getAll()) : Array.from(this.mem.scans.values()); },
+  async put(scan) { if (!this.db) { this.mem.scans.set(scan.id, JSON.parse(JSON.stringify(scan))); return; } await this.tx('scans', (t) => { t.objectStore('scans').put(scan); }); },
+  async putBlob(k, b) { if (!this.db) { this.mem.blobs.set(k, b); return; } await this.tx('blobs', (t) => { t.objectStore('blobs').put(b, k); }); },
+  async getBlob(k) { return this.db ? (await this.rq(this.db.transaction('blobs').objectStore('blobs').get(k))) || null : this.mem.blobs.get(k) || null; },
+  async delBlob(k) { if (!this.db) { this.mem.blobs.delete(k); return; } await this.tx('blobs', (t) => { t.objectStore('blobs').delete(k); }); },
+  async del(id) {
+    if (!this.db) { this.mem.scans.delete(id); Array.from(this.mem.blobs.keys()).filter((k) => k.indexOf(id + '/') === 0).forEach((k) => this.mem.blobs.delete(k)); return; }
+    const keys = (await this.rq(this.db.transaction('blobs').objectStore('blobs').getAllKeys())).filter((k) => String(k).indexOf(id + '/') === 0);
+    await this.tx(['scans', 'blobs'], (t) => { t.objectStore('scans').delete(id); keys.forEach((k) => t.objectStore('blobs').delete(k)); });
+  }
+};
+
+/* Guardar / compartir archivos */
+async function saveFile(name, blob) {
+  const claude = window.claude;
+  if (claude && claude.use) {
+    let dl = null; try { dl = await claude.use('downloads'); } catch (e) { dl = null; }
+    if (dl) { try { await dl.save({ filename: name, data: blob }); return 'saved'; } catch (e) { if (e && e.code === 'declined') return 'declined'; } }
+  }
+  const url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000); return 'saved';
+}
+async function shareFiles(files) {
+  try {
+    if (navigator.canShare && navigator.canShare({ files })) { await navigator.share({ files }); return 'shared'; }
+  } catch (e) { if (e && e.name === 'AbortError') return 'declined'; }
+  return 'unsupported';
+}
+const canShareFiles = (files) => { try { return !!(navigator.canShare && navigator.canShare({ files })); } catch (e) { return false; } };
+
+/* ===== Mthi Music ===== */
+const IA = 'https://archive.org';
+const GENRES = [['Popular', ''], ['Electrónica', 'electronic'], ['Rock', 'rock'], ['Hip hop', 'hip hop'], ['Jazz', 'jazz'], ['Clásica', 'classical'], ['Ambiente', 'ambient'], ['Folk', 'folk'], ['Reggae', 'reggae'], ['Latina', 'latin'], ['Pop', 'pop'], ['Lo-fi', 'lofi']];
+const RADIO_TAGS = [['Latino', 'latin'], ['Reggaetón', 'reggaeton'], ['Hip hop', 'hip hop'], ['Rock', 'rock'], ['Pop', 'pop'], ['Chill', 'chill'], ['Jazz', 'jazz'], ['Salsa', 'salsa']];
+const MIRRORS = ['https://de1.api.radio-browser.info', 'https://fr1.api.radio-browser.info', 'https://nl1.api.radio-browser.info', 'https://at1.api.radio-browser.info'];
+const jget = (k, d) => { try { return JSON.parse(lsGet(k)) || d; } catch (e) { return d; } };
+const fmtT = (s) => { if (!isFinite(s) || s < 0) return '0:00'; s = Math.floor(s); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+const cleanName = (f) => f.replace(/\.[a-z0-9]{2,4}$/i, '').replace(/^\d{1,2}[\s._-]+/, '').replace(/_/g, ' ').trim();
+
+/* --- almacenamiento (IndexedDB): metadatos y audio por separado --- */
+const MDB = (() => {
+  let db = null;
+  const open = () => new Promise((res) => {
+    if (db) return res(db);
+    try { const r = indexedDB.open('mthi-music', 1); r.onupgradeneeded = () => { r.result.createObjectStore('m', { keyPath: 'id' }); r.result.createObjectStore('b'); }; r.onsuccess = () => { db = r.result; res(db); }; r.onerror = () => res(null); } catch (e) { res(null); }
+  });
+  const run = async (store, mode, fn) => { const d = await open(); if (!d) return null; return new Promise((res) => { try { const t = d.transaction(store, mode); const rq = fn(t.objectStore(store)); t.oncomplete = () => res(rq && rq.result !== undefined ? rq.result : true); t.onerror = t.onabort = () => res(null); } catch (e) { res(null); } }); };
+  return {
+    metas: async () => (await run('m', 'readonly', (s) => s.getAll())) || [],
+    meta: (id) => run('m', 'readonly', (s) => s.get(id)),
+    blob: (id) => run('b', 'readonly', (s) => s.get(id)),
+    save: async (m, blob) => { const a = await run('b', 'readwrite', (s) => s.put(blob, m.id)); if (!a) return false; return !!(await run('m', 'readwrite', (s) => s.put(m))); },
+    del: async (id) => { await run('b', 'readwrite', (s) => s.delete(id)); await run('m', 'readwrite', (s) => s.delete(id)); }
+  };
+})();
+let savedIds = new Set(), savedMetas = [];
+async function refreshSaved() { savedMetas = (await MDB.metas()).sort((a, b) => b.added - a.added); savedIds = new Set(savedMetas.map((m) => m.id)); }
+
+/* --- red --- */
+async function jfetch(u, ms = 12000) {
+  const ac = new AbortController(), t = setTimeout(() => ac.abort(), ms);
+  try { const r = await fetch(u, { signal: ac.signal }); if (!r.ok) throw new Error('http ' + r.status); return await r.json(); } finally { clearTimeout(t); }
+}
+async function iaSearch(kw, page) {
+  const base = 'mediatype:audio AND licenseurl:*creativecommons* AND format:(MP3)';
+  const q = kw ? base + ' AND (' + kw.replace(/[()"]/g, ' ') + ')' : base + ' AND collection:netlabels';
+  const u = IA + '/advancedsearch.php?' + new URLSearchParams({ q, 'fl[]': 'identifier', rows: '30', page: String(page || 1), output: 'json', sort: 'downloads desc' }).toString().replace('fl%5B%5D', 'fl[]') + '&fl[]=title&fl[]=creator';
+  const j = await jfetch(u);
+  return ((j.response && j.response.docs) || []).map((d) => ({ id: d.identifier, title: [].concat(d.title || d.identifier)[0], artist: [].concat(d.creator || 'Varios')[0] }));
+}
+async function iaTracks(id) {
+  const j = await jfetch(IA + '/metadata/' + encodeURIComponent(id), 15000);
+  const files = (j.files || []).filter((f) => /mp3/i.test(f.format || '') || /\.mp3$/i.test(f.name || ''));
+  const prefer = files.filter((f) => /vbr|128|64|mp3/i.test(f.format || '')); const list = (prefer.length ? prefer : files).filter((f) => !/_(64kb|sample)\./i.test(f.name));
+  const seen = new Set(); const md = j.metadata || {};
+  const album = [].concat(md.title || id)[0], artist = [].concat(md.creator || 'Varios')[0];
+  return list.filter((f) => { if (seen.has(f.name)) return false; seen.add(f.name); return true; }).sort((a, b) => (parseInt(a.track) || 999) - (parseInt(b.track) || 999) || a.name.localeCompare(b.name)).map((f) => ({
+    id: id + '/' + f.name, title: f.title || cleanName(f.name.split('/').pop()), artist: f.creator || artist, album,
+    url: IA + '/download/' + encodeURIComponent(id) + '/' + f.name.split('/').map(encodeURIComponent).join('/'), cover: IA + '/services/img/' + encodeURIComponent(id), dur: parseFloat(f.length) || 0, size: parseInt(f.size) || 0
+  }));
+}
+async function radioApi(path) { let err; for (const m of MIRRORS.slice().sort(() => Math.random() - 0.5)) { try { return await jfetch(m + path, 9000); } catch (e) { err = e; } } throw err; }
+
+/* --- reproductor --- */
+const A = new Audio(); A.preload = 'auto';
+const P = { queue: [], i: -1, shuffle: false, repeat: 0, cur: null, objUrl: null, caching: null, sleepT: null };
+function revoke() { if (P.objUrl) { URL.revokeObjectURL(P.objUrl); P.objUrl = null; } }
+async function playTrack(list, idx) {
+  P.queue = list; P.i = idx; const t = list[idx]; if (!t) return;
+  P.cur = t; revoke(); updateMini(); updateFull();
+  let src = t.url;
+  if (!t.live) {
+    const b = await MDB.blob(t.id);
+    if (P.cur !== t) return;
+    if (b && b !== true) { P.objUrl = URL.createObjectURL(b); src = P.objUrl; }
+  }
+  A.src = src;
+  try { await A.play(); } catch (e) { if (e && e.name !== 'AbortError') toast(t.live ? 'No se pudo abrir esa emisora' : 'No se pudo reproducir. ¿Sin internet?'); }
+  setSession(t);
+  if (!t.live && !savedIds.has(t.id) && src === t.url && lsGet('mthi-music-auto') !== '0') cacheTrack(t, true);
+}
+function next(auto) {
+  if (!P.queue.length) return;
+  if (P.cur && P.cur.live) return;
+  if (auto && P.repeat === 2) { A.currentTime = 0; A.play(); return; }
+  let i = P.i + 1;
+  if (P.shuffle) { if (P.queue.length > 1) { do { i = Math.floor(Math.random() * P.queue.length); } while (i === P.i); } else i = 0; }
+  if (i >= P.queue.length) { if (P.repeat === 1 || !auto) i = 0; else { updateMini(); return; } }
+  playTrack(P.queue, i);
+}
+function prev() { if (A.currentTime > 4 || P.i <= 0) { A.currentTime = 0; return; } playTrack(P.queue, P.i - 1); }
+function toggle() { if (!P.cur) return; if (A.paused) A.play().catch(() => {}); else A.pause(); }
+A.addEventListener('ended', () => next(true));
+A.addEventListener('play', () => { updateMini(); updateFull(); });
+A.addEventListener('pause', () => { updateMini(); updateFull(); });
+A.addEventListener('error', () => { if (P.cur && A.src) toast(P.cur.live ? 'Esa emisora no responde' : 'No se pudo reproducir esta canción'); });
+A.addEventListener('timeupdate', () => { const s = $('#seek'); if (s && !s._drag && isFinite(A.duration)) { s.max = A.duration; s.value = A.currentTime; $('#tCur').textContent = fmtT(A.currentTime); $('#tDur').textContent = fmtT(A.duration); } });
+function setSession(t) {
+  if (!('mediaSession' in navigator)) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: t.title, artist: t.artist || '', album: t.album || '', artwork: t.cover ? [{ src: t.cover, sizes: '256x256' }] : [] });
+    const h = { play: () => A.play(), pause: () => A.pause(), previoustrack: prev, nexttrack: () => next(false), seekto: (d) => { A.currentTime = d.seekTime; } };
+    Object.keys(h).forEach((k) => { try { navigator.mediaSession.setActionHandler(k, h[k]); } catch (e) {} });
+  } catch (e) {}
+}
+
+/* --- guardar sin conexión (automático) --- */
+const busy = new Map();
+async function cacheTrack(t, quiet) {
+  if (busy.has(t.id) || savedIds.has(t.id) || t.live) return busy.get(t.id);
+  const job = (async () => {
+    try {
+      const r = await fetch(t.url); if (!r.ok) throw new Error('http');
+      const blob = await r.blob(); if (!blob.size) throw new Error('vacío');
+      let cover = ''; try { cover = await smallCover(t.cover); } catch (e) {}
+      const ok = await MDB.save({ id: t.id, title: t.title, artist: t.artist, album: t.album, cover, size: blob.size, dur: t.dur || 0, added: Date.now() }, blob);
+      if (!ok) throw new Error('almacenamiento');
+      await refreshSaved(); if (tab === 'saved') renderTab(); else markSaved();
+      if (!quiet) toast('Guardada para oír sin conexión', 1800);
+    } catch (e) { if (!quiet) toast('No se pudo guardar esta canción'); else if (!window._warned) { window._warned = 1; toast('Suena en línea, pero no pude guardarla sin conexión', 3500); } }
+    finally { busy.delete(t.id); }
+  })();
+  busy.set(t.id, job); return job;
+}
+async function smallCover(url) {
+  if (!url) return '';
+  const r = await fetch(url); if (!r.ok) return '';
+  const bm = await createImageBitmap(await r.blob()); const s = 96 / Math.max(bm.width, bm.height);
+  const c = mkCanvas(bm.width * s, bm.height * s); c.getContext('2d').drawImage(bm, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', 0.7);
+}
+function markSaved() { $$('[data-sid]').forEach((e) => { e.hidden = !savedIds.has(e.dataset.sid); }); }
+
+/* --- interfaz --- */
+let tab = 'disc', view = null;
+const content = () => $('#content');
+function covEl(t, big) {
+  const c = el('div', big ? 'big-cov' : 'cov');
+  if (t && t.cover) { const im = new Image(); im.alt = ''; im.loading = 'lazy'; im.src = t.cover; im.onerror = () => { im.remove(); c.innerHTML = icon('music', big ? 64 : 22); }; c.appendChild(im); } else c.innerHTML = icon(t && t.live ? 'radio' : 'music', big ? 64 : 22);
+  return c;
+}
+function trackRow(t, list, idx, opts) {
+  opts = opts || {};
+  const b = el('button', 'row' + (P.cur && P.cur.id === t.id ? ' on' : '')); b.type = 'button';
+  b.appendChild(covEl(t));
+  const m = el('div', 'meta'); m.appendChild(el('span', 't', t.title)); m.appendChild(el('span', 's', t.artist || ''));
+  b.appendChild(m);
+  if (!t.live) { const d = el('span', 'dur'); d.dataset.sid = t.id; d.title = 'Guardada'; d.innerHTML = icon('check', 18); d.hidden = !savedIds.has(t.id); d.style.color = 'var(--accent)'; b.appendChild(d); }
+  if (t.dur) b.appendChild(el('span', 'dur', fmtT(t.dur)));
+  b.addEventListener('click', () => playTrack(list, idx));
+  if (opts.del) { const w = el('div'); w.style.cssText = 'display:flex;align-items:center'; w.appendChild(b); b.style.flex = '1'; const x = el('button', 'ibtn'); x.type = 'button'; x.dataset.i = 'trash'; x.setAttribute('aria-label', 'Borrar ' + t.title); x.addEventListener('click', async () => { await MDB.del(t.id); await refreshSaved(); renderTab(); toast('Quitada de las guardadas', 1600); }); w.appendChild(x); paintIcons(w); return w; }
+  return b;
+}
+function renderTab() { $$('#tabs button').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false')); ({ disc: renderDisc, saved: renderSaved, radio: renderRadio })[tab](); }
+function setTab(t) { tab = t; view = null; try { history.pushState({ t }, ''); } catch (e) {} renderTab(); content().scrollTop = 0; }
+
+/* Música */
+let discState = { g: 0, q: '', items: null, err: false };
+function renderDisc() {
+  if (view) return renderAlbum(view);
+  const c = content(); c.textContent = '';
+  const f = el('form'); const inp = el('input', 'field-in'); inp.type = 'search'; inp.placeholder = 'Busca artista, álbum o género…'; inp.value = discState.q; inp.enterKeyHint = 'search'; inp.setAttribute('aria-label', 'Buscar música'); f.appendChild(inp);
+  f.addEventListener('submit', (e) => { e.preventDefault(); discState.q = inp.value.trim(); discState.items = null; inp.blur(); loadDisc(); });
+  c.appendChild(f);
+  const ch = el('div', 'seg'); ch.style.marginTop = '10px';
+  GENRES.forEach((g, i) => { const b = el('button', '', g[0]); b.type = 'button'; b.setAttribute('aria-pressed', !discState.q && discState.g === i ? 'true' : 'false'); b.addEventListener('click', () => { discState.g = i; discState.q = ''; discState.items = null; loadDisc(); renderDisc(); }); ch.appendChild(b); });
+  c.appendChild(ch);
+  c.appendChild(el('p', 'note', 'Música con licencia libre (Creative Commons) de Internet Archive. Al reproducir una canción se guarda sola para oírla sin conexión.'));
+  const box = el('div'); box.id = 'discBox'; c.appendChild(box);
+  drawDisc();
+  if (!discState.items && !discState.err) loadDisc();
+}
+function drawDisc() {
+  const box = $('#discBox'); if (!box) return; box.textContent = '';
+  if (discState.err) { const e = el('div', 'empty'); e.innerHTML = '<h2>Sin conexión</h2><p>No pude cargar el catálogo. Tus canciones guardadas están en la pestaña “Sin conexión”.</p>'; const b = el('button', 'btn primary', 'Reintentar'); b.type = 'button'; b.addEventListener('click', loadDisc); e.appendChild(b); box.appendChild(e); return; }
+  if (!discState.items) { for (let i = 0; i < 6; i++) { const s = el('div'); s.style.cssText = 'height:56px;margin:8px 0;border-radius:12px;background:var(--line);opacity:.5'; box.appendChild(s); } return; }
+  if (!discState.items.length) { box.appendChild(el('div', 'empty', 'No encontré resultados. Prueba otra búsqueda.')); return; }
+  discState.items.forEach((it) => {
+    const b = el('button', 'row'); b.type = 'button'; b.appendChild(covEl({ cover: IA + '/services/img/' + encodeURIComponent(it.id) }));
+    const m = el('div', 'meta'); m.appendChild(el('span', 't', it.title)); m.appendChild(el('span', 's', it.artist)); b.appendChild(m);
+    b.addEventListener('click', () => openAlbum(it)); box.appendChild(b);
+  });
+}
+async function loadDisc() {
+  discState.err = false; discState.items = null; drawDisc();
+  const my = discState.items; const kw = discState.q || GENRES[discState.g][1];
+  try { let r = await iaSearch(kw); if (!r.length && !discState.q) r = await iaSearch(kw, 1); discState.items = r; } catch (e) { discState.err = true; discState.items = null; }
+  if (tab === 'disc' && !view) drawDisc();
+}
+async function openAlbum(it) {
+  view = { it, tracks: null }; try { history.pushState({ t: 'disc', a: it.id }, ''); } catch (e) {}
+  renderAlbum(view); content().scrollTop = 0;
+  try { view.tracks = await iaTracks(it.id); } catch (e) { view.err = true; }
+  if (view && view.it === it) renderAlbum(view);
+}
+function renderAlbum(v) {
+  const c = content(); c.textContent = '';
+  const h = el('div'); h.style.cssText = 'display:flex;gap:14px;align-items:center;margin:6px 0 12px';
+  const cv = covEl({ cover: IA + '/services/img/' + encodeURIComponent(v.it.id) }); cv.style.cssText = 'width:84px;height:84px;flex:none'; h.appendChild(cv);
+  const m = el('div', 'meta'); m.appendChild(el('span', 't', v.it.title)); m.firstChild.style.whiteSpace = 'normal'; m.appendChild(el('span', 's', v.it.artist)); h.appendChild(m); c.appendChild(h);
+  if (v.err) { c.appendChild(el('div', 'empty', 'No pude cargar este álbum. Revisa tu internet.')); return; }
+  if (!v.tracks) { c.appendChild(el('p', 'note', 'Cargando canciones…')); return; }
+  if (!v.tracks.length) { c.appendChild(el('div', 'empty', 'Este álbum no tiene canciones reproducibles.')); return; }
+  const bar = el('div', 'bar');
+  const pa = el('button', 'btn primary'); pa.type = 'button'; pa.innerHTML = icon('play', 18) + '<span>Reproducir</span>'; pa.addEventListener('click', () => playTrack(v.tracks, 0));
+  const sv = el('button', 'btn'); sv.type = 'button'; sv.innerHTML = icon('download', 18) + '<span>Guardar todo</span>';
+  sv.addEventListener('click', async () => { sv.disabled = true; let n = 0; for (const t of v.tracks) { sv.lastChild.textContent = 'Guardando ' + (++n) + '/' + v.tracks.length; await cacheTrack(t, true); } sv.lastChild.textContent = 'Guardado'; toast('Álbum guardado para oír sin conexión'); });
+  bar.append(pa, sv); c.appendChild(bar);
+  v.tracks.forEach((t, i) => c.appendChild(trackRow(t, v.tracks, i)));
+}
+
+/* Sin conexión */
+function renderSaved() {
+  const c = content(); c.textContent = '';
+  if (!savedMetas.length) { const e = el('div', 'empty'); e.innerHTML = '<h2>Aún no hay canciones guardadas</h2><p>Cada canción que reproduzcas en “Música” se guarda sola y aparece aquí para oírla sin internet.</p>'; c.appendChild(e); return; }
+  const tot = savedMetas.reduce((s, m) => s + (m.size || 0), 0);
+  c.appendChild(el('p', 'note', plural(savedMetas.length, 'canción', 'canciones') + ' · ' + fmtSize(tot) + ' en tu teléfono'));
+  const list = savedMetas.map((m) => ({ id: m.id, title: m.title, artist: m.artist, album: m.album, cover: m.cover, dur: m.dur, url: '' }));
+  const bar = el('div', 'bar');
+  const pa = el('button', 'btn primary'); pa.type = 'button'; pa.innerHTML = icon('play', 18) + '<span>Reproducir</span>'; pa.addEventListener('click', () => { P.shuffle = false; playTrack(list, 0); });
+  const sh = el('button', 'btn'); sh.type = 'button'; sh.innerHTML = icon('shuffle', 18) + '<span>Aleatorio</span>'; sh.addEventListener('click', () => { P.shuffle = true; playTrack(list, Math.floor(Math.random() * list.length)); });
+  bar.append(pa, sh); c.appendChild(bar);
+  list.forEach((t, i) => c.appendChild(trackRow(t, list, i, { del: true })));
+  const aut = el('label', 'note'); aut.style.cssText = 'display:flex;gap:8px;align-items:center;margin-top:18px'; const cb = el('input'); cb.type = 'checkbox'; cb.checked = lsGet('mthi-music-auto') !== '0'; cb.addEventListener('change', () => lsSet('mthi-music-auto', cb.checked ? '1' : '0')); aut.append(cb, document.createTextNode('Guardar automáticamente lo que reproduzco')); c.appendChild(aut);
+}
+
+/* Radio */
+let radio = { tag: 0, q: '', items: null, err: false };
+const radioFavs = () => jget('mthi-music-rfav', []);
+function renderRadio() {
+  const c = content(); c.textContent = '';
+  const f = el('form'); const inp = el('input', 'field-in'); inp.type = 'search'; inp.placeholder = 'Busca una emisora (ej. Radio Disney)…'; inp.value = radio.q; inp.enterKeyHint = 'search'; f.appendChild(inp);
+  f.addEventListener('submit', (e) => { e.preventDefault(); radio.q = inp.value.trim(); radio.tag = -1; loadRadio(); inp.blur(); }); c.appendChild(f);
+  const ch = el('div', 'seg'); ch.style.marginTop = '10px';
+  const fv = el('button', '', '★ Favoritas'); fv.type = 'button'; fv.setAttribute('aria-pressed', radio.tag === -2 ? 'true' : 'false'); fv.addEventListener('click', () => { radio.tag = -2; radio.q = ''; drawRadio(); renderRadio(); }); ch.appendChild(fv);
+  RADIO_TAGS.forEach((g, i) => { const b = el('button', '', g[0]); b.type = 'button'; b.setAttribute('aria-pressed', radio.tag === i ? 'true' : 'false'); b.addEventListener('click', () => { radio.tag = i; radio.q = ''; loadRadio(); renderRadio(); }); ch.appendChild(b); });
+  c.appendChild(ch); c.appendChild(el('p', 'note', 'Emisoras en vivo: necesitan internet. Toca ★ para guardar tus favoritas.'));
+  const box = el('div'); box.id = 'radBox'; c.appendChild(box); drawRadio();
+  if (!radio.items && !radio.err && radio.tag !== -2) loadRadio();
+}
+function stToTrack(s) { return { id: 'radio:' + s.stationuuid, title: s.name.trim(), artist: [s.country, (s.tags || '').split(',')[0]].filter(Boolean).join(' · '), url: s.url_resolved || s.url, cover: s.favicon || '', live: true, st: s }; }
+function drawRadio() {
+  const box = $('#radBox'); if (!box) return; box.textContent = '';
+  let items = radio.tag === -2 ? radioFavs() : radio.items;
+  if (radio.tag !== -2 && radio.err) { const e = el('div', 'empty'); e.innerHTML = '<h2>Sin conexión</h2><p>Las radios necesitan internet.</p>'; const b = el('button', 'btn primary', 'Reintentar'); b.type = 'button'; b.addEventListener('click', loadRadio); e.appendChild(b); box.appendChild(e); return; }
+  if (!items) { box.appendChild(el('p', 'note', 'Buscando emisoras…')); return; }
+  if (!items.length) { box.appendChild(el('div', 'empty', radio.tag === -2 ? 'Aún no tienes emisoras favoritas.' : 'No encontré emisoras.')); return; }
+  const list = items.map(stToTrack);
+  list.forEach((t, i) => {
+    const w = el('div'); w.style.cssText = 'display:flex;align-items:center';
+    const r = trackRow(t, list, i); r.style.flex = '1'; w.appendChild(r);
+    const fav = radioFavs().some((x) => x.stationuuid === t.st.stationuuid);
+    const b = el('button', 'ibtn'); b.type = 'button'; b.textContent = fav ? '★' : '☆'; b.style.fontSize = '22px'; b.setAttribute('aria-label', 'Favorita');
+    b.addEventListener('click', () => { let f = radioFavs(); const on = f.some((x) => x.stationuuid === t.st.stationuuid); f = on ? f.filter((x) => x.stationuuid !== t.st.stationuuid) : [t.st].concat(f); lsSet('mthi-music-rfav', JSON.stringify(f.slice(0, 60))); if (radio.tag === -2) drawRadio(); else b.textContent = on ? '☆' : '★'; });
+    w.appendChild(b); box.appendChild(w);
+  });
+}
+async function loadRadio() {
+  radio.err = false; radio.items = null; drawRadio();
+  try {
+    const p = new URLSearchParams({ limit: '40', hidebroken: 'true', order: 'clickcount', reverse: 'true' });
+    if (radio.q) p.set('name', radio.q); else p.set('tag', RADIO_TAGS[Math.max(0, radio.tag)][1]);
+    const r = await radioApi('/json/stations/search?' + p);
+    const seen = new Set(); radio.items = r.filter((s) => (s.url_resolved || s.url) && !/m3u8/i.test(s.url_resolved || '') && !seen.has(s.name.trim().toLowerCase()) && seen.add(s.name.trim().toLowerCase()));
+  } catch (e) { radio.err = true; }
+  if (tab === 'radio') drawRadio();
+}
+
+/* mini y pantalla completa */
+function updateMini() {
+  const m = $('#mini'); const t = P.cur; if (!t) { m.hidden = true; return; }
+  m.hidden = false; m.textContent = '';
+  m.appendChild(covEl(t));
+  const me = el('div', 'meta'); me.appendChild(el('span', 't', t.title)); me.appendChild(el('span', 's', t.live ? 'EN VIVO · ' + (t.artist || '') : t.artist || '')); me.addEventListener('click', openFull); m.appendChild(me);
+  const pb = el('button', 'ibtn'); pb.type = 'button'; pb.innerHTML = icon(A.paused ? 'play' : 'pause', 26); pb.setAttribute('aria-label', A.paused ? 'Reproducir' : 'Pausar'); pb.addEventListener('click', toggle); m.appendChild(pb);
+  if (!t.live) { const nb = el('button', 'ibtn'); nb.type = 'button'; nb.innerHTML = icon('next', 24); nb.setAttribute('aria-label', 'Siguiente'); nb.addEventListener('click', () => next(false)); m.appendChild(nb); }
+}
+let full = false;
+function openFull() { full = true; try { history.pushState({ full: 1 }, ''); } catch (e) {} updateFull(); }
+function closeFull() { full = false; $$('.pl').forEach((x) => x.remove()); }
+function updateFull() {
+  if (!full) return; $$('.pl').forEach((x) => x.remove());
+  const t = P.cur; if (!t) { full = false; return; }
+  const d = el('div', 'pl'); d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Reproductor');
+  const tr = el('div', 'top-r'); const cl = el('button', 'ibtn'); cl.type = 'button'; cl.innerHTML = icon('down', 26); cl.setAttribute('aria-label', 'Cerrar'); cl.addEventListener('click', () => { try { history.back(); } catch (e) { closeFull(); } }); tr.appendChild(cl);
+  const sl = el('button', 'ibtn'); sl.type = 'button'; sl.innerHTML = icon('moon', 22); sl.setAttribute('aria-label', 'Temporizador'); sl.setAttribute('aria-pressed', P.sleepT ? 'true' : 'false'); sl.addEventListener('click', sleepMenu); tr.appendChild(sl); d.appendChild(tr);
+  d.appendChild(covEl(t, true)); d.appendChild(el('h2', '', t.title));
+  const ar = el('p', 'art'); if (t.live) { ar.innerHTML = '<span class="live">EN VIVO</span> '; ar.appendChild(document.createTextNode(t.artist || '')); } else ar.textContent = [t.artist, t.album].filter(Boolean).join(' · '); d.appendChild(ar);
+  if (!t.live) {
+    const sk = el('input', 'seek'); sk.type = 'range'; sk.id = 'seek'; sk.min = 0; sk.max = isFinite(A.duration) ? A.duration : 100; sk.step = 'any'; sk.value = A.currentTime; sk.setAttribute('aria-label', 'Posición');
+    sk.addEventListener('input', () => { sk._drag = true; $('#tCur').textContent = fmtT(sk.value); }); sk.addEventListener('change', () => { A.currentTime = +sk.value; sk._drag = false; });
+    d.appendChild(sk); const tm = el('div', 'times'); const a = el('span', '', fmtT(A.currentTime)); a.id = 'tCur'; const b = el('span', '', fmtT(A.duration)); b.id = 'tDur'; tm.append(a, b); d.appendChild(tm);
+  }
+  const ct = el('div', 'ctl');
+  const mk = (ic, lb, fn, cls, pr) => { const b = el('button', 'ibtn' + (cls ? ' ' + cls : '')); b.type = 'button'; b.innerHTML = icon(ic, cls === 'play' ? 34 : 26); b.setAttribute('aria-label', lb); if (pr != null) b.setAttribute('aria-pressed', pr ? 'true' : 'false'); b.addEventListener('click', fn); return b; };
+  if (!t.live) ct.appendChild(mk('shuffle', 'Aleatorio', () => { P.shuffle = !P.shuffle; updateFull(); }, '', P.shuffle));
+  if (!t.live) ct.appendChild(mk('prev', 'Anterior', prev));
+  ct.appendChild(mk(A.paused ? 'play' : 'pause', A.paused ? 'Reproducir' : 'Pausar', toggle, 'play'));
+  if (!t.live) ct.appendChild(mk('next', 'Siguiente', () => next(false)));
+  if (!t.live) { const r = mk('repeat', 'Repetir', () => { P.repeat = (P.repeat + 1) % 3; updateFull(); }, '', P.repeat > 0); if (P.repeat === 2) r.appendChild(el('small', '', '1')); ct.appendChild(r); }
+  d.appendChild(ct);
+  if (!t.live && !savedIds.has(t.id)) { const sv = el('button', 'btn'); sv.type = 'button'; sv.innerHTML = icon('download', 18) + ' Guardar para oír sin conexión'; sv.style.margin = '0 auto'; sv.addEventListener('click', async () => { sv.disabled = true; sv.textContent = 'Guardando…'; await cacheTrack(t); updateFull(); }); d.appendChild(sv); }
+  else if (!t.live) { const n = el('p', 'note', '✓ Guardada: suena sin internet'); n.style.textAlign = 'center'; d.appendChild(n); }
+  $('#layer').appendChild(d); $('.pl').querySelector('.play') && $('.pl .play').focus({ preventScroll: true });
+}
+function sleepMenu() {
+  openSheet('Temporizador', (sh, close) => {
+    const g = grid(sh);
+    [[15, '15 minutos'], [30, '30 minutos'], [60, '1 hora']].forEach(([m, l]) => g.appendChild(optBtn('moon', l, () => { clearTimeout(P.sleepT); P.sleepT = setTimeout(() => { A.pause(); P.sleepT = null; updateFull(); }, m * 60000); toast('Se pausará en ' + l, 2000); close(); updateFull(); })));
+    if (P.sleepT) g.appendChild(optBtn('trash', 'Cancelar temporizador', () => { clearTimeout(P.sleepT); P.sleepT = null; close(); updateFull(); }, { danger: true }));
+  });
+}
+
+/* --- inicio --- */
+async function init() {
+  paintIcons();
+  $$('#tabs button').forEach((b) => b.addEventListener('click', () => { if (full) closeFull(); setTab(b.dataset.tab); }));
+  window.addEventListener('popstate', (e) => {
+    if (full) { closeFull(); return; }
+    const s = e.state || {};
+    if (s.t && s.a && view) return;
+    if (s.t) { tab = s.t; if (!s.a) view = null; renderTab(); } else { view = null; tab = 'disc'; renderTab(); }
+  });
+  await refreshSaved();
+  try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+  if (!navigator.onLine && savedMetas.length) tab = 'saved';
+  renderTab();
+}
+init();
+
+</script>
+
+<script>if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+</body></html>
